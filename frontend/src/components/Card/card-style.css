@@ -1,0 +1,99 @@
+.card {
+  height: 100px;
+  width: 70px;
+  margin: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  position: relative;
+  background-color: white;
+}
+
+.cardDisabled {
+  height: 100px;
+  width: 70px;
+  margin: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  position: relative;
+  background: url("../../back.png");
+  background-size: 100%;
+}
+
+.clubs {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 30%;
+  left: 27%;
+  background-image: url("../../suits.svg");
+  background-size: 60px;
+  background-position: 30px 30px;
+}
+
+.diamonds {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 30%;
+  left: 27%;
+  background-image: url("../../suits.svg");
+  background-size: 60px;
+  background-position: 30px 0;
+}
+
+.hearts {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 30%;
+  left: 27%;
+  background-image: url("../../suits.svg");
+  background-size: 60px;
+  background-position: 0 30px;
+}
+
+.spades {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 30%;
+  left: 27%;
+  background-image: url("../../suits.svg");
+  background-size: 60px;
+  background-position: 0 0;
+}
+
+.clubs-value,
+.spades-value {
+  color: #515260;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.hearts-value,
+.diamonds-value {
+  color: #ec6e69;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.clubs-value:first-child,
+.spades-value:first-child,
+.hearts-value:first-child,
+.diamonds-value:first-child {
+  top: 2px;
+  left: 5px;
+  position: absolute;
+}
+
+.clubs-value:last-child,
+.spades-value:last-child,
+.hearts-value:last-child,
+.diamonds-value:last-child {
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
+  transform: rotatez(180deg);
+}
