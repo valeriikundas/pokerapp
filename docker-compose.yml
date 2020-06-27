@@ -19,7 +19,7 @@ services:
   ui:
     build:
       context: ./frontend
-      dockerfile: ../ui.Dockerfile
+      dockerfile: ui.Dockerfile
     volumes:
       - ./frontend:/frontend
       #- '/frontend/node_modules:/app/node_modules'

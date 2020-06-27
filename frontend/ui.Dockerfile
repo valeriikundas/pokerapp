@@ -5,6 +5,4 @@ WORKDIR /frontend
 COPY package-lock.json ./
 RUN npm install --verbose
 COPY . .
-CMD ["npm", "run", "serve"]
-
-# CMD [ "http-server", "dist" ]
+CMD ["npm", "start"]
