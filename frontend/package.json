@@ -3,23 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.9.14",
-    "@material-ui/styles": "^4.9.14",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/styles": "^4.11.3",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
-    "axios": "^0.19.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "axios": "^0.21.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-socket-io": "^0.2.5",
-    "react-toastify": "^6.0.5",
+    "react-toastify": "^6.2.0",
     "react-websocket": "^2.1.0",
-    "socket.io-client": "^2.3.0",
-    "typescript": "~3.7.2"
+    "socket.io-client": "^2.4.0",
+    "typescript": "^3.7.7"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,9 +42,11 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-router-dom": "^5.1.5",
-    "@types/socket.io-client": "^1.4.33"
+    "@testing-library/react": "^9.5.0",
+    "@types/react": "^16.14.4",
+    "@types/react-dom": "^16.9.11",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/socket.io-client": "^1.4.35",
+    "jest": "^26.6.3"
   }
 }
