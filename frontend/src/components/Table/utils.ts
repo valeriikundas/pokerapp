@@ -1,4 +1,4 @@
-import { IRank, IPocketHand, ISuit, ICard } from "../../types";
+import { IRank, IPocketHand, ISuit, ICard } from "../../models/game";
 
 export const convertStringToCard = (card: string): ICard => {
   const charToSuitMapping: { [key: string]: string } = {

@@ -1,5 +1,5 @@
-import { ActionType } from "../types";
-import api from "./api";
+import { ActionType } from "../models/game";
+import apiClient from "./apiClient";
 
 const act = (
   tableId: number,
@@ -7,7 +7,7 @@ const act = (
   type: ActionType,
   size?: number
 ) => {
-  api.post(`http://localhost:5000/api/act/${tableId}/${username}`, {
+  apiClient.post(`http://localhost:5000/api/act/${tableId}/${username}`, {
     type: type,
     size: size,
   });
