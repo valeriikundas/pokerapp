@@ -1,11 +1,5 @@
-import {
-  colorSecond,
-  colorFirst,
-  colorThird,
-  colorFourth,
-  colorFifth,
-} from "./../../style/variables.style";
 import { makeStyles, Theme } from "@material-ui/core";
+import { colorFifth, colorThird } from "./../../style/variables.style";
 
 export default makeStyles((theme: Theme) => ({
   player: {

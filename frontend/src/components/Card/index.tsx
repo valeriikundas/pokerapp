@@ -1,5 +1,5 @@
 import React from "react";
-import { ICard } from "../../types";
+import { ICard } from "../../models/game";
 import "./card-style.css";
 
 interface ICardProps {

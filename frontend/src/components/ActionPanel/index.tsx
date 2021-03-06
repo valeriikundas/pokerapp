@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import Slider from "@material-ui/core/Slider";
 import React, { useEffect } from "react";
-import { ActionType, IRequestAction } from "../../types/index";
+import { ActionType, IRequestAction } from "../../models/game";
 import useStyles from "./style";
 
 interface ActionPanelProps {

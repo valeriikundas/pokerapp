@@ -1,5 +1,5 @@
 import React from "react";
-import { ICard, IPlayer, IPocketHand } from "../../types";
+import { ICard, IPlayer, IPocketHand } from "../../models/game";
 import Card from "../Card";
 import useStyles from "./style";
 

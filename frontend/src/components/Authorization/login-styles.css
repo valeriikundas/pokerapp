@@ -1,30 +1,32 @@
-
 .wrapper {
   display: flex;
   justify-content: center;
   height: 100vh;
   margin: 0;
   color: #bcbecf;
-  font: 600 16px/18px 'Open Sans', sans-serif;
+  font: 600 16px/18px "Open Sans", sans-serif;
 }
 
-*, :after, :before {
-  box-sizing: border-box
+*,
+:after,
+:before {
+  box-sizing: border-box;
 }
 
-.clearfix:after, .clearfix:before {
-  content: '';
-  display: table
+.clearfix:after,
+.clearfix:before {
+  content: "";
+  display: table;
 }
 
 .clearfix:after {
   clear: both;
-  display: block
+  display: block;
 }
 
 a {
   color: inherit;
-  text-decoration: none
+  text-decoration: none;
 }
 
 .loginWrap {
@@ -34,12 +36,10 @@ a {
   min-height: 490px;
   position: relative;
   border-radius: 60px;
-  background: url(https://livecasinosverige.com/wp-content/uploads/2019/09/Poker.jpg) no-repeat center;
-  box-shadow: 0 0 5px #fff,
-  0 0 10px #fff,
-  0 0 20px #fff,
-  0 0 40px #0c8787,
-  0 0 60px #0ff;
+  background: url(https://livecasinosverige.com/wp-content/uploads/2019/09/Poker.jpg)
+    no-repeat center;
+  box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #0c8787,
+    0 0 60px #0ff;
 }
 
 .loginHtml {
@@ -59,7 +59,7 @@ a {
   bottom: 0;
   position: absolute;
   backface-visibility: hidden;
-  transition: all .4s linear;
+  transition: all 0.4s linear;
 }
 
 .loginHtml .signIn,
@@ -105,7 +105,7 @@ a {
   border: none;
   padding: 15px 20px;
   border-radius: 25px;
-  background: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .loginForm .group input[data-type="password"] {
@@ -129,17 +129,17 @@ a {
   border-radius: 2px;
   position: relative;
   display: inline-block;
-  background: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .loginForm .group label .icon:before,
 .loginForm .group label .icon:after {
-  content: '';
+  content: "";
   width: 10px;
   height: 2px;
   background: #fff;
   position: absolute;
-  transition: all .2s ease-in-out 0s;
+  transition: all 0.2s ease-in-out 0s;
 }
 
 .loginForm .group label .icon:before {
@@ -182,11 +182,10 @@ a {
 .hr {
   height: 2px;
   margin: 30px 0 20px 0;
-  background: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .footLnk {
   text-align: center;
   padding: 5px;
-
 }

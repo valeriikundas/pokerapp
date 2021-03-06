@@ -1,7 +1,7 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 
-export default class NotFound extends Component{
-    render() {
-        return <h2>Page not found</h2>;
-    }
+export default class NotFound extends Component {
+  render() {
+    return <h2>Page not found</h2>;
+  }
 }
