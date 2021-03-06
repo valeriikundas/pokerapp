@@ -1,11 +1,11 @@
 import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import act from "../../apis/act";
-import api from "../../apis/api";
-import setupEventListener from "../../apis/socket";
+import apiClient from "../../apis/apiClient";
+import { useSockets } from "../../apis/useSockets";
 import {
   ActionType,
   ICard,
@@ -13,8 +13,10 @@ import {
   IPocketHand,
   IRequestAction,
 } from "../../types";
+import { assert } from "../../utils/asserts";
 import ActionPanel from "../ActionPanel";
 import Card from "../Card";
+import { showInfoNotification } from "../Common/notifications";
 import Player from "../Player";
 import useStyles from "./style";
 import { convertStringToCard } from "./utils";
@@ -92,17 +94,17 @@ const Table: React.FC = () => {
         break;
       }
       case "river_card": {
-        //TODO:
+        // TODO:
         handleRiver(data);
         break;
       }
       case "winner": {
-        //TODO:
+        //  TODO:
         handleWinner(data);
         break;
       }
       case "request_action": {
-        //TODO:
+        //  TODO:
         handleRequestAction(data);
         break;
       }
@@ -112,12 +114,12 @@ const Table: React.FC = () => {
       default: {
         alert("wrong event type came from backend => " + event);
       }
-      //TODO: other events
+      //  TODO: other events
     }
   }, [socketEventData]);
 
   const handlePreflop = (data: any) => {
-    //TODO:
+    //  TODO:
     const playersData = data["players"];
     const players: IPlayer[] = playersData.map(
       (player: { [key: string]: any }): IPlayer => ({
@@ -164,7 +166,7 @@ const Table: React.FC = () => {
   };
 
   const handleFlop = (data: any) => {
-    //TODO:
+    //  TODO:
     const receivedFlopCards: string[] = data["flop_cards"];
     const flopCards: ICard[] = receivedFlopCards.map((card: string) =>
       convertStringToCard(card)
@@ -173,7 +175,7 @@ const Table: React.FC = () => {
   };
 
   const handleTurn = (data: any) => {
-    //TODO:
+    //  TODO:
     const receivedTurnCard: string = data["turn_card"];
     const turnCard: ICard = convertStringToCard(receivedTurnCard);
     const newCardsOnTable = [...cardsOnTable, turnCard];
@@ -181,7 +183,7 @@ const Table: React.FC = () => {
   };
 
   const handleRiver = (data: any) => {
-    //TODO:
+    //  TODO:
     const receivedRiverCard: string = data["river_card"];
     const riverCard: ICard = convertStringToCard(receivedRiverCard);
     const newCardsOnTable = [...cardsOnTable, riverCard];
