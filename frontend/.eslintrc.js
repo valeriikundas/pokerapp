@@ -12,5 +12,18 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint"],
-  rules: {},
+  rules: {
+    "require-jsdoc": [
+      "error",
+      {
+        require: {
+          FunctionDeclaration: false,
+          MethodDefinition: true,
+          ClassDeclaration: true,
+          ArrowFunctionExpression: false,
+          FunctionExpression: true,
+        },
+      },
+    ],
+  },
 };
