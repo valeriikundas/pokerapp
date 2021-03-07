@@ -1,13 +1,13 @@
 import React from "react";
-import { ICard } from "../../models/game";
+import { Card as CardType } from "../../models/card";
 import "./card-style.css";
 
-interface ICardProps {
-  card?: ICard;
+interface CardProps {
+  card?: CardType;
   disabled?: boolean;
 }
 
-const Card = ({ card, disabled }: ICardProps) => {
+const Card = ({ card, disabled }: CardProps) => {
   return (
     <>
       {disabled ? (

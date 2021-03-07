@@ -1,11 +1,11 @@
 import { Button } from "@material-ui/core";
 import Slider from "@material-ui/core/Slider";
 import React, { useEffect } from "react";
-import { ActionType, IRequestAction } from "../../models/game";
+import { ActionType, RequestAction } from "../../models/game";
 import useStyles from "./style";
 
 interface ActionPanelProps {
-  actions: IRequestAction[];
+  actions: RequestAction[];
   tableId: number;
   username: string;
   handleAction: (type: ActionType, size?: number) => void;

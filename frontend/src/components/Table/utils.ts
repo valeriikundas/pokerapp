@@ -1,6 +1,7 @@
-import { IRank, IPocketHand, ISuit, ICard } from "../../models/game";
+import { PocketHand } from "src/models/game";
+import { Card, Rank, Suit } from "../../models/card";
 
-export const convertStringToCard = (card: string): ICard => {
+export const convertStringToCard = (card: string): Card => {
   const charToSuitMapping: { [key: string]: string } = {
     d: "diamonds",
     s: "spades",
@@ -8,13 +9,13 @@ export const convertStringToCard = (card: string): ICard => {
     c: "clubs",
   };
 
-  const rank = card[0] as IRank;
-  const suit = charToSuitMapping[card[1]] as ISuit;
+  const rank = card[0] as Rank;
+  const suit = charToSuitMapping[card[1]] as Suit;
 
   return { suit: suit, rank: rank };
 };
 
-export const convertStringsToPocketHand = (cards: string[]): IPocketHand => {
+export const convertStringsToPocketHand = (cards: string[]): PocketHand => {
   const charToISuitMapping: { [key: string]: string } = {
     d: "diamonds",
     s: "spades",
@@ -22,10 +23,10 @@ export const convertStringsToPocketHand = (cards: string[]): IPocketHand => {
     c: "clubs",
   };
 
-  const rank1 = cards[0] as IRank;
-  const suit1 = charToISuitMapping[cards[1]] as ISuit;
-  const rank2 = cards[2] as IRank;
-  const suit2 = charToISuitMapping[cards[3]] as ISuit;
+  const rank1 = cards[0] as Rank;
+  const suit1 = charToISuitMapping[cards[1]] as Suit;
+  const rank2 = cards[2] as Rank;
+  const suit2 = charToISuitMapping[cards[3]] as Suit;
 
   return [
     { suit: suit1, rank: rank1 },
