@@ -9,6 +9,7 @@
         "types": [
             "cypress"
         ],
+        "baseUrl": ".."
     },
     "include": [
         "**/*.ts"
