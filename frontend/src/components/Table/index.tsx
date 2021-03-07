@@ -1,66 +1,64 @@
 import { Button, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CardComponent from "src/components/Card";
+import PlayerComponent from "src/components/Player/index";
 import act from "../../apis/act";
 import apiClient from "../../apis/apiClient";
-import { useSockets } from "../../apis/useSockets";
+import { SocketMessage, useSockets } from "../../apis/useSockets";
+import { Card } from "../../models/card";
+import { PreflopEvent } from "../../models/events";
 import {
   ActionType,
-  ICard,
-  IPlayer,
-  IPocketHand,
-  IRequestAction,
-} from "../../types";
+  Player,
+  PocketHand,
+  RequestAction,
+} from "../../models/game";
+import { preflopSchema } from "../../schemas";
 import { assert } from "../../utils/asserts";
+import { TestID } from "../../utils/test/selectors";
 import ActionPanel from "../ActionPanel";
-import Card from "../Card";
 import { showInfoNotification } from "../Common/notifications";
-import Player from "../Player";
 import useStyles from "./style";
 import { convertStringToCard } from "./utils";
 
 const Table: React.FC = () => {
   const classes = useStyles();
 
-  const { state } = useLocation();
+  const { id } = useParams();
 
-  const [currentPlayerPosition, setCurrentPlayerPosition] = React.useState(1); // taken from preflop
+  const tableId: number = id;
+
+  const [
+    currentPlayerPosition,
+    setCurrentPlayerPosition,
+  ] = React.useState<number>();
   const [
     currentPlayerCards,
     setCurrentPlayerCards,
-  ] = React.useState<IPocketHand | null>(null);
+  ] = React.useState<PocketHand | null>(null);
 
-  const [players, setPlayers] = React.useState<IPlayer[]>([]);
+  const [players, setPlayers] = React.useState<Player[]>([]);
 
   const [buttonPosition, setButtonPosition] = useState(1);
 
-  const [event, setEvent] = React.useState("");
+  const [cardsOnTable, setCardsOnTable] = useState<Card[]>();
 
-  const [cardsOnTable, setCardsOnTable] = useState<ICard[]>([]);
+  const [actionPosition, setActionPosition] = React.useState<number>();
 
-  const [actionPosition, setActionPosition] = React.useState(4);
+  const [username, setUsername] = useState<string>();
 
-  const [tableId, setTableId] = useState<number>(state && state["tableId"]);
-  const [username, setUsername] = useState<string>(
-    (state && state["username"]) || "ccc"
-  );
-  const [actions, setActions] = useState<IRequestAction[]>([]);
+  const [actions, setActions] = useState<RequestAction[]>([]);
 
-  const [pot, setPot] = useState(0);
+  const [pot, setPot] = useState<number>();
 
   const [isPlayer, setIsPlayer] = useState(false);
 
-  const [socketResponse, setSocketResponse] = useState("");
-
-  const [socketEventData, setSocketEventData] = useState<{
-    [key: string]: any;
-  }>({});
+  const [socketMessage, setSocketMessage] = React.useState<SocketMessage>();
 
   const [blinds, setBlinds] = useState({ small: 0, big: 0, ante: 0 });
-
-  const notify = (message: string) => toast(message);
 
   const notifyWinner = (message: string) =>
     toast(message, {
@@ -69,7 +67,7 @@ const Table: React.FC = () => {
 
   // const refreshPlayers = async () => {
   //   const response = await api.get("/tables/1/");
-  //   setPlayers(response.data["players"]);
+  //   setPlayers(response.data.players);
   // };
 
   useEffect(() => {
@@ -116,40 +114,31 @@ const Table: React.FC = () => {
       }
       //  TODO: other events
     }
-  }, [socketEventData]);
+  }, [socketMessage]);
 
-  const handlePreflop = (data: any) => {
-    //  TODO:
-    const playersData = data["players"];
-    const players: IPlayer[] = playersData.map(
-      (player: { [key: string]: any }): IPlayer => ({
-        position: player.position,
-        name: player.username,
-        stack_size: player.stack,
-      })
-    );
-    setPlayers(players);
+  const handlePreflop = (data: PreflopEvent) => {
+    setPlayers(daya.players);
 
-    const activePlayers = data["active_players"];
+    const activePlayers = data.active_players;
 
-    const buttonPosition: number = data["button_position"];
+    const buttonPosition: number = data.button_position;
 
-    const blinds = data["blinds"];
+    const blinds = data.blinds;
     setBlinds({
       small: blinds.small,
       big: blinds.big,
       ante: blinds.ante,
     });
 
-    const pot: number = data["pot"];
+    const pot: number = data.pot;
     setPot(pot);
 
-    const currentPlayerData = data["current"];
+    const currentPlayerData = data.current;
 
-    const currentPlayerCards: string[] = currentPlayerData["cards"];
+    const currentPlayerCards: string[] = currentPlayerData.cards;
     const currentPocketHand = currentPlayerCards.map((card) =>
       convertStringToCard(card)
-    ) as IPocketHand;
+    ) as PocketHand;
 
     setCurrentPlayerCards(currentPocketHand);
 
@@ -167,46 +156,47 @@ const Table: React.FC = () => {
 
   const handleFlop = (data: any) => {
     //  TODO:
-    const receivedFlopCards: string[] = data["flop_cards"];
-    const flopCards: ICard[] = receivedFlopCards.map((card: string) =>
+    const receivedFlopCards: string[] = data.flop_cards;
+    const flopCards: Card[] = receivedFlopCards.map((card: string) =>
       convertStringToCard(card)
     );
+
     setCardsOnTable(flopCards);
   };
 
   const handleTurn = (data: any) => {
     //  TODO:
-    const receivedTurnCard: string = data["turn_card"];
-    const turnCard: ICard = convertStringToCard(receivedTurnCard);
+    const receivedTurnCard: string = data.turn_card;
+    const turnCard: Card = convertStringToCard(receivedTurnCard);
     const newCardsOnTable = [...cardsOnTable, turnCard];
     setCardsOnTable(newCardsOnTable);
   };
 
   const handleRiver = (data: any) => {
     //  TODO:
-    const receivedRiverCard: string = data["river_card"];
-    const riverCard: ICard = convertStringToCard(receivedRiverCard);
+    const receivedRiverCard: string = data.river_card;
+    const riverCard: Card = convertStringToCard(receivedRiverCard);
     const newCardsOnTable = [...cardsOnTable, riverCard];
     setCardsOnTable(newCardsOnTable);
   };
 
   const handleWinner = (data: any) => {
-    const winnerPosition: number = data["winner_position"];
-    const pot: number = data["pot"];
+    const winnerPosition: number = data.winner_position;
+    const pot: number = data.pot;
 
     if (winnerPosition === currentPlayerPosition) {
       notifyWinner("Congrats " + winnerPosition + " You won " + pot + "chips");
     } else {
-      notify("You lost bro");
+      showInfoNotification("You lost bro");
     }
   };
 
   const handleRequestAction = (data: any) => {
-    const readActionSpace: { [key: string]: any }[] = data["action_space"];
+    const readActionSpace: { [key: string]: any }[] = data.action_space;
 
-    const actionSpace: IRequestAction[] = readActionSpace.map((action) => {
+    const actionSpace: RequestAction[] = readActionSpace.map((action) => {
       const { type, size, min, max } = action;
-      const a: IRequestAction = { type, size, min, max };
+      const a: RequestAction = { type, size, min, max };
       return a;
     });
     setActions(actionSpace);
@@ -221,22 +211,26 @@ const Table: React.FC = () => {
 
   const onUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setUsername(value);
+    // setUsername(value);
   };
 
   const onJoinTableClick = async () => {
-    const response = await api.get(`/tables/${tableId}/join/${username}/`);
+    const response = await apiClient.get(
+      `/tables/${tableId}/join/${username}/`
+    );
     console.log("response", response);
     setIsPlayer(true);
     // refreshPlayers();
-    //todo: subscribe #2 to socketio
+    // todo: subscribe #2 to socketio
   };
 
   const onLeaveTableClick = async () => {
-    const response = await api.get(`/tables/${tableId}/leave/${username}/`);
+    const response = await apiClient.get(
+      `/tables/${tableId}/leave/${username}/`
+    );
     setIsPlayer(false);
-    // refreshPlayers();
-    //todo: subscribe #2 to socketio
+    //   refreshPlayers();
+    // todo: subscribe #2 to socketio
   };
 
   const handleAction = (type: ActionType, size?: number) => {
@@ -252,7 +246,7 @@ const Table: React.FC = () => {
       <h3>username: {username}</h3>
       <Button
         onClick={() => {
-          api.get("/restart");
+          apiClient.get("/restart");
         }}
       >
         Restart hand
