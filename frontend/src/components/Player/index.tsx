@@ -1,58 +1,48 @@
 import React from "react";
-import { ICard, IPlayer, IPocketHand } from "../../models/game";
-import Card from "../Card";
+import CardComponent from "src/components/Card";
+import { TestID } from "src/utils/test/selectors";
+import { Player as PlayerType, PocketHand } from "../../models/game";
 import useStyles from "./style";
 
 interface PlayerProps {
-  player: IPlayer;
-  currentPlayerPosition: number;
-  currentPlayerCards: IPocketHand | null;
-  position: number;
-  button: boolean;
+  player: PlayerType;
+  isCurrentPlayer: boolean;
+  playerCards: PocketHand | null;
+  isButton: boolean;
   active: boolean;
 }
 
 const Player = ({
   player,
-  currentPlayerPosition,
-  currentPlayerCards,
-  position,
-  button,
+  isCurrentPlayer,
+  playerCards,
+  isButton,
   active,
 }: PlayerProps) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.player}>
+    <div className={classes.player} data-cy={TestID.TABLE_PLAYER}>
       <div>
-        {currentPlayerPosition === position &&
-          (currentPlayerCards ? (
-            currentPlayerCards.map((card: ICard, index: number) => (
-              <Card key={index} card={card} />
-            ))
-          ) : (
-            <div>
-              <Card disabled />
-              <Card disabled />
-            </div>
-          ))}
-        {
-          currentPlayerPosition !== position && (
-            // currentPlayerCards &&
-            // currentPlayerCards.map((card: ICard, index: number) => (
-            <div>
-              <Card disabled />
-              <Card disabled />
-            </div>
+        {isCurrentPlayer ? (
+          playerCards && (
+            <>
+              <CardComponent card={playerCards[0]} />
+              <CardComponent card={playerCards[1]} />
+            </>
           )
-          // ))
-        }
+        ) : (
+          <>
+            <CardComponent disabled />
+            <CardComponent disabled />
+          </>
+        )}
       </div>
       <div className={classes.playerInfo}>
         <div>{player.name}</div>
-        <div>{player.position || "none"}</div>
+        <div>{player.position}</div>
         <div>{player.stack_size}</div>
-        <div>{button ? "button" : ""}</div>
+        <div>{isButton ? "button" : ""}</div>
         <div>{active ? "active" : ""}</div>
       </div>
     </div>
