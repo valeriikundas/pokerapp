@@ -14,13 +14,22 @@
     ],
     "isolatedModules": true,
     "noEmit": true,
+    "types": [
+      "cypress"
+    ],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "baseUrl": "."
   },
   "include": [
     "src",
+    "cypress"
   ],
   "exclude": [
     "node_modules",
     "**/*.test.ts",
-    "**/*.test.tsx",
+    "**/*.test.tsx"
   ]
 }

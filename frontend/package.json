@@ -13,7 +13,8 @@
     "react-socket-io": "^0.2.5",
     "react-toastify": "^6.2.0",
     "react-websocket": "^2.1.0",
-    "socket.io-client": "^2.4.0"
+    "socket.io-client": "^2.4.0",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,6 +44,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.1.2",
+    "@types/faker": "^5.1.7",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
     "@types/react": "^16.14.4",
@@ -55,6 +57,8 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-react": "^7.22.0",
+    "faker": "^5.4.0",
+    "fishery": "^1.2.0",
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.3",
     "typescript": "^3.9.9"
