@@ -37,5 +37,3 @@ export type Card = {
   suit: Suit;
   rank: Rank;
 };
-
-

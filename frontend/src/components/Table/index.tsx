@@ -202,11 +202,21 @@ const Table: React.FC = () => {
     setActions(actionSpace);
   };
 
-  //set main event listener
-  useEffect(() => {
-    setupEventListener(setSocketEventData);
+  const handleNewSocketMessage = async (x: SocketMessage): Promise<void> => {
+    setSocketMessage(x);
+    // FIXME: should await for message to be handled
+  };
 
-    api.get("/restart");
+  const { sendMessage } = useSockets(handleNewSocketMessage);
+
+  //  set main event listener
+  const [restartCalled, setRestartCalled] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (restartCalled) return;
+
+    apiClient.get("/restart");
+    setRestartCalled(true);
   }, []);
 
   const onUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,14 +244,22 @@ const Table: React.FC = () => {
   };
 
   const handleAction = (type: ActionType, size?: number) => {
+    assert(tableId != null, "error loading table");
+    assert(username != null, "error loading user");
+
     act(tableId, username, type, size);
     setActions([]);
   };
 
+  if (!tableId) {
+    console.error(`tableId is nullish`);
+    return null;
+  }
+
   return (
     <div className={classes.container}>
       <ToastContainer />
-      <h3>socket message: {socketResponse}</h3>
+      <h3>socket message: {JSON.stringify(socketMessage)}</h3>
       <h3>tableId: {tableId}</h3>
       <h3>username: {username}</h3>
       <Button
@@ -302,12 +320,7 @@ const Table: React.FC = () => {
         {
           // event === "request_action" &&
           // currentPlayerPosition === actionPosition &&
-          <ActionPanel
-            actions={actions}
-            tableId={tableId}
-            username={username}
-            handleAction={handleAction}
-          />
+          <ActionPanel actions={actions} handleAction={handleAction} />
         }
       </div>
     </div>

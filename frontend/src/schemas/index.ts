@@ -10,7 +10,7 @@ export const playerSchema = yup.object().shape({
   name: yup.string().required(),
   position: yup.number().required(),
   stack_size: yup.number().required(),
-  cards: yup.array().length(2).of(yup.array(cardSchema)),
+  cards: yup.array().length(2).of(yup.array(cardSchema)).optional(),
 });
 
 export const currentPlayerSchema = yup.object().shape({

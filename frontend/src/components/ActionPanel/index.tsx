@@ -6,17 +6,10 @@ import useStyles from "./style";
 
 interface ActionPanelProps {
   actions: RequestAction[];
-  tableId: number;
-  username: string;
   handleAction: (type: ActionType, size?: number) => void;
 }
 
-const ActionPanel = ({
-  tableId,
-  username,
-  actions,
-  handleAction,
-}: ActionPanelProps) => {
+const ActionPanel = ({ actions, handleAction }: ActionPanelProps) => {
   const classes = useStyles();
 
   const [raiseSize, setRaiseSize] = React.useState(0);
