@@ -1,7 +1,7 @@
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"
 
 export const showInfoNotification = (message: string) =>
-  toast(message, { type: "info" });
+  toast(message, { type: "info" })
 
 export const showErrorNotification = (message: string) =>
-  toast(message, { type: "error" });
+  toast(message, { type: "error" })

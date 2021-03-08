@@ -3,6 +3,8 @@ import { Factory } from "fishery";
 import { Card, rankList, suitList } from "src/models/card";
 import { Player, PocketHand } from "src/models/game";
 
+export const defaultUsernameForTesting = "Kate";
+
 export const cardFactory = Factory.define<Card>(() => ({
   suit: faker.random.arrayElement(suitList),
   rank: faker.random.arrayElement(rankList),
