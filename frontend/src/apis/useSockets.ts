@@ -1,66 +1,71 @@
-import React from "react";
-import socketIOClient from "socket.io-client";
-import { showInfoNotification } from "../components/Common/notifications";
+import React from "react"
+import socketIOClient from "socket.io-client"
+import { assert } from "../utils/asserts"
+import { showInfoNotification } from "../utils/notifications"
 import {
+  clearMessagesInLocalStorage,
   getAllMessagesFromLocalStorage,
   putMessageToLocalStorage,
-} from "./mockSockets";
+} from "./mockSockets"
 
-const SOCKETIO_ENDPOINT = "http://localhost:5000/";
+const SOCKETIO_ENDPOINT = "http://localhost:5000/"
 
-const TEST: boolean = process.env.MOCK_SOCKETS !== undefined;
+const TEST: boolean = true
 
-export type SocketMessage = Record<string, unknown>;
+export type SocketMessage = Record<string, unknown>
 
 const useRealSockets = (
-  onReceiveSocketMessage: (socketMessage: SocketMessage) => void
+  onReceiveSocketMessage: (socketMessage: SocketMessage) => Promise<void>
 ) => {
-  const socket = socketIOClient(SOCKETIO_ENDPOINT);
+  const socket = socketIOClient(SOCKETIO_ENDPOINT)
 
   socket.on("connect", () => {
-    console.log("connect event");
-  });
+    console.log("connect event")
+  })
 
   socket.on("disconnect", () => {
-    console.log("disconnect event");
-  });
+    console.log("disconnect event")
+  })
 
   socket.on("json", (data: SocketMessage) => {
-    console.log("on on on data", data);
-    onReceiveSocketMessage(data);
-  });
+    onReceiveSocketMessage(data)
+  })
 
-  const sendMessage = (message: string) => {
-    socket.send(message);
-  };
+  const sendMessage = (message: SocketMessage) => {
+    socket.send(message)
+  }
 
   return {
     sendMessage,
-  };
-};
+  }
+}
 
 const useMockSockets = (
-  onReceiveSocketMessage: (socketMessage: SocketMessage) => void
+  onReceiveSocketMessage: (socketMessage: SocketMessage) => Promise<void>
 ) => {
-  const sendMessage = (message: string) => {
-    showInfoNotification(`sendMessage ${message}`);
-    putMessageToLocalStorage(message);
-  };
+  const sendMessage = (message: SocketMessage) => {
+    showInfoNotification(`sendMessage ${message}`)
+    putMessageToLocalStorage(message)
+  }
 
   React.useEffect(() => {
-    while (true) {
-      const messages = getAllMessagesFromLocalStorage();
-      console.log("messages", messages);
+    const interval = setInterval(() => {
+      const messages = getAllMessagesFromLocalStorage()
 
       messages.forEach((msg) => {
-        onReceiveSocketMessage(msg);
-      });
-    }
-  }, []);
+        assert(typeof msg === "object" && msg)
+
+        onReceiveSocketMessage(msg as Record<string, unknown>)
+      })
+      clearMessagesInLocalStorage()
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return {
     sendMessage,
-  };
-};
+  }
+}
 
-export const useSockets = TEST ? useMockSockets : useRealSockets;
+export const useSockets = TEST ? useMockSockets : useRealSockets
