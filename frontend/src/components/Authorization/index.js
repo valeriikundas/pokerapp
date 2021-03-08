@@ -1,22 +1,22 @@
-import axios from "axios";
-import React, { Component } from "react";
-import { Redirect } from "react-router";
-import styles from "./login-styles.css";
+import axios from "axios"
+import React, { Component } from "react"
+import { Redirect } from "react-router"
+import styles from "./login-styles.css"
 
 class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       redirect: false,
       redirectToDashboard: false,
       username: "",
       tableId: "",
-    };
+    }
 
-    this.joinTable = this.joinTable.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSubmitToTables = this.handleSubmitToTables.bind(this);
+    this.joinTable = this.joinTable.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmitToTables = this.handleSubmitToTables.bind(this)
   }
 
   handleSubmit() {
@@ -28,18 +28,18 @@ class Login extends Component {
     axios
       .get(`http://localhost:8000/api/users/login/${this.state.username}/`)
       .then((response) => {
-        this.joinTable();
+        this.joinTable()
       })
-      .catch(console.log);
+      .catch(console.log)
   }
 
   handleSubmitToTables() {
     axios
       .get(`http://localhost:8000/api/users/login/${this.state.username}/`)
       .then((response) => {
-        this.setState({ redirectToDashboard: true });
+        this.setState({ redirectToDashboard: true })
       })
-      .catch(console.log);
+      .catch(console.log)
   }
 
   joinTable() {
@@ -49,18 +49,18 @@ class Login extends Component {
       )
       .then((response) => {
         // if (response.data.status === 'ok') {
-        setTimeout(() => this.setState({ redirect: true }), 2000);
+        setTimeout(() => this.setState({ redirect: true }), 2000)
         // }
       })
-      .catch(console.log);
+      .catch(console.log)
   }
 
   handleChange(event) {
-    const value = event.target.value;
+    const value = event.target.value
     this.setState({
       ...this.state,
       [event.target.name]: value,
-    });
+    })
   }
 
   render() {
@@ -75,7 +75,7 @@ class Login extends Component {
             },
           }}
         />
-      );
+      )
     } else if (this.state.redirectToDashboard) {
       return (
         <Redirect
@@ -86,7 +86,7 @@ class Login extends Component {
             },
           }}
         />
-      );
+      )
     }
     return (
       <div className={styles.wrapper}>
@@ -134,8 +134,8 @@ class Login extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Login;
+export default Login

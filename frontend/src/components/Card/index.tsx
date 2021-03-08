@@ -1,10 +1,10 @@
-import React from "react";
-import { Card as CardType } from "../../models/card";
-import "./card-style.css";
+import React from "react"
+import { Card as CardType } from "../../models/card"
+import "./card-style.css"
 
 interface CardProps {
-  card?: CardType;
-  disabled?: boolean;
+  card?: CardType
+  disabled?: boolean
 }
 
 const Card = ({ card, disabled }: CardProps) => {
@@ -22,7 +22,7 @@ const Card = ({ card, disabled }: CardProps) => {
         )
       )}
     </>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

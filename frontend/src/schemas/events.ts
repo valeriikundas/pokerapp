@@ -1,10 +1,10 @@
-import * as yup from "yup";
+import * as yup from "yup"
 import {
   blindSchema,
   currentPlayerSchema,
   playerSchema,
   requestActionSchema,
-} from "./index";
+} from "./index"
 
 export const preflopEventSchema = yup
   .object()
@@ -18,7 +18,7 @@ export const preflopEventSchema = yup
     current: currentPlayerSchema.required(),
   })
   .noUnknown(true)
-  .strict();
+  .strict()
 
 export const requestActionEventSchema = yup
   .object()
@@ -27,4 +27,4 @@ export const requestActionEventSchema = yup
     action_space: yup.array().of(requestActionSchema),
   })
   .noUnknown(true)
-  .strict();
+  .strict()

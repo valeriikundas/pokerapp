@@ -1,7 +1,7 @@
-import { Button, makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { Redirect } from "react-router";
-import apiClient from "../../apis/apiClient";
+import { Button, makeStyles } from "@material-ui/core"
+import React, { useEffect, useState } from "react"
+import { Redirect } from "react-router"
+import apiClient from "../../apis/apiClient"
 
 const useStyles = makeStyles({
   // body: {
@@ -94,51 +94,51 @@ const useStyles = makeStyles({
   //   color: "#fff",
   //   display: "block",
   // },
-});
+})
 
 // const A={
 //   const classes=useStyles();
 // }
 
 type Table = {
-  id: number;
-};
+  id: number
+}
 
 const Dashboard = () => {
   // const classes = useStyles();
 
-  const [redirect, setRedirect] = useState(false);
-  const [tableId, setTableId] = useState(0);
-  const [username, setUsername] = useState("valera");
+  const [redirect, setRedirect] = useState(false)
+  const [tableId, setTableId] = useState(0)
+  const [username, setUsername] = useState("valera")
 
-  const [tables, setTables] = useState<Table[]>([{ id: 5 }]);
+  const [tables, setTables] = useState<Table[]>([{ id: 5 }])
 
   useEffect(() => {
     // const username = window.location.href;
     // console.log("username :>> ", username);
     const fetchTables = async () => {
-      const result = await apiClient.get(`/tables`);
-      setTables(result.data);
-    };
-    fetchTables();
-  }, []);
+      const result = await apiClient.get(`/tables`)
+      setTables(result.data)
+    }
+    fetchTables()
+  }, [])
 
   const handleSubmit = async (id: number) => {
     // const username = window.location.href;
     // console.log("username :>> ", username);
-    setTableId(id);
+    setTableId(id)
     // setUsername(username);
 
-    const result = await apiClient.get(`/tables/${id}/join/${username}`);
+    const result = await apiClient.get(`/tables/${id}/join/${username}`)
 
     if (result.data["status"] === "joined") {
-      setRedirect(true);
-      return;
+      setRedirect(true)
+      return
     }
 
-    console.error(result.data);
-    return;
-  };
+    console.error(result.data)
+    return
+  }
 
   return redirect ? (
     <Redirect
@@ -201,7 +201,7 @@ const Dashboard = () => {
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

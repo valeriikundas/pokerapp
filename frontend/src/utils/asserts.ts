@@ -1,4 +1,4 @@
-import { AssertionError } from "assert";
+import { AssertionError } from "assert"
 
 /**
  * Assert condition
@@ -8,6 +8,6 @@ import { AssertionError } from "assert";
  */
 export function assert(condition: any, msg?: string): asserts condition {
   if (!condition) {
-    throw new AssertionError({ message: msg });
+    throw new AssertionError({ message: msg })
   }
 }

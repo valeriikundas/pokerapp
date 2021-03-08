@@ -24,5 +24,5 @@ const preflopObj = {
   current: {
     cards: ["9d", "3h"],
   },
-};
-export default preflopObj;
+}
+export default preflopObj

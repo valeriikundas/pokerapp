@@ -1,15 +1,15 @@
-import React from "react";
-import CardComponent from "src/components/Card";
-import { TestID } from "src/utils/test/selectors";
-import { Player as PlayerType, PocketHand } from "../../models/game";
-import useStyles from "./style";
+import React from "react"
+import CardComponent from "src/components/Card"
+import { TestID } from "src/utils/test/selectors"
+import { Player as PlayerType, PocketHand } from "../../models/game"
+import useStyles from "./style"
 
 interface PlayerProps {
-  player: PlayerType;
-  isCurrentPlayer: boolean;
-  playerCards?: PocketHand;
-  isButton: boolean;
-  active: boolean;
+  player: PlayerType
+  isCurrentPlayer: boolean
+  playerCards?: PocketHand
+  isButton: boolean
+  active: boolean
 }
 
 const Player = ({
@@ -19,7 +19,7 @@ const Player = ({
   isButton,
   active,
 }: PlayerProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.player} data-cy={TestID.TABLE_PLAYER}>
@@ -46,7 +46,7 @@ const Player = ({
         <div>{active ? "active" : ""}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Player;
+export default Player

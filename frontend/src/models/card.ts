@@ -1,6 +1,6 @@
-export type Suit = "diamonds" | "hearts" | "clubs" | "spades";
+export type Suit = "diamonds" | "hearts" | "clubs" | "spades"
 
-export const suitList: Suit[] = ["diamonds", "hearts", "clubs", "spades"];
+export const suitList: Suit[] = ["diamonds", "hearts", "clubs", "spades"]
 
 export type Rank =
   | "2"
@@ -15,7 +15,7 @@ export type Rank =
   | "J"
   | "Q"
   | "K"
-  | "A";
+  | "A"
 
 export const rankList: Rank[] = [
   "2",
@@ -31,9 +31,9 @@ export const rankList: Rank[] = [
   "Q",
   "K",
   "A",
-];
+]
 
 export type Card = {
-  suit: Suit;
-  rank: Rank;
-};
+  suit: Suit
+  rank: Rank
+}

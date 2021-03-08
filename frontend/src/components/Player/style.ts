@@ -1,5 +1,5 @@
-import { makeStyles, Theme } from "@material-ui/core";
-import { colorFifth, colorThird } from "./../../style/variables.style";
+import { makeStyles, Theme } from "@material-ui/core"
+import { colorFifth, colorThird } from "./../../style/variables.style"
 
 export default makeStyles((theme: Theme) => ({
   player: {
@@ -73,4 +73,4 @@ export default makeStyles((theme: Theme) => ({
     // backgroundColor: "#222222ab !important",
     // borderRadius: "20px",
   },
-}));
+}))
