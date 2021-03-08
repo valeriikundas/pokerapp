@@ -7,7 +7,7 @@ import useStyles from "./style";
 interface PlayerProps {
   player: PlayerType;
   isCurrentPlayer: boolean;
-  playerCards: PocketHand | null;
+  playerCards?: PocketHand;
   isButton: boolean;
   active: boolean;
 }

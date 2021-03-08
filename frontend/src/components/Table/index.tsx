@@ -1,26 +1,32 @@
-import { Button, TextField } from "@material-ui/core";
+import { Button, CircularProgress, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardComponent from "src/components/Card";
 import PlayerComponent from "src/components/Player/index";
+import {
+  preflopEventSchema,
+  requestActionEventSchema,
+} from "src/schemas/events";
+import { defaultUsernameForTesting } from "src/utils/test/fixtures";
+import { isEventType } from "src/utils/typeGuards";
 import act from "../../apis/act";
 import apiClient from "../../apis/apiClient";
 import { SocketMessage, useSockets } from "../../apis/useSockets";
 import { Card } from "../../models/card";
-import { PreflopEvent } from "../../models/events";
+import { PreflopEvent, RequestActionEvent } from "../../models/events";
 import {
   ActionType,
+  EventType,
   Player,
   PocketHand,
   RequestAction,
 } from "../../models/game";
-import { preflopSchema } from "../../schemas";
 import { assert } from "../../utils/asserts";
+import { showInfoNotification } from "../../utils/notifications";
 import { TestID } from "../../utils/test/selectors";
 import ActionPanel from "../ActionPanel";
-import { showInfoNotification } from "../Common/notifications";
 import useStyles from "./style";
 import { convertStringToCard } from "./utils";
 
@@ -35,12 +41,13 @@ const Table: React.FC = () => {
     currentPlayerPosition,
     setCurrentPlayerPosition,
   ] = React.useState<number>();
+
   const [
     currentPlayerCards,
     setCurrentPlayerCards,
-  ] = React.useState<PocketHand | null>(null);
+  ] = React.useState<PocketHand>();
 
-  const [players, setPlayers] = React.useState<Player[]>([]);
+  const [players, setPlayers] = React.useState<Player[]>();
 
   const [buttonPosition, setButtonPosition] = useState(1);
 
@@ -48,9 +55,11 @@ const Table: React.FC = () => {
 
   const [actionPosition, setActionPosition] = React.useState<number>();
 
-  const [username, setUsername] = useState<string>();
+  const [username, setUsername] = React.useState<string>(
+    defaultUsernameForTesting
+  );
 
-  const [actions, setActions] = useState<RequestAction[]>([]);
+  const [actionSpace, setActionSpace] = useState<RequestAction[]>();
 
   const [pot, setPot] = useState<number>();
 
@@ -70,68 +79,80 @@ const Table: React.FC = () => {
   //   setPlayers(response.data.players);
   // };
 
-  useEffect(() => {
-    const data = socketEventData;
+  React.useEffect(() => {
+    if (!socketMessage) {
+      console.debug(`socket message is empty`);
+      return;
+    }
+    const data = socketMessage;
 
-    setSocketResponse(`${data}`);
-    notify(`received ${data["event"]} event`);
+    showInfoNotification(`received ${data.event} event`);
 
-    const event = data["event"];
+    assert(isEventType(data.event), `unknown event type "${data.event}"`);
+
+    const event: EventType = data.event;
 
     switch (event) {
-      case "preflop": {
-        handlePreflop(data);
+      case EventType.preflop: {
+        preflopEventSchema.validateSync(data);
+        const preflopEvent: PreflopEvent = (data as unknown) as PreflopEvent;
+        handlePreflop(preflopEvent);
         break;
       }
-      case "flop_cards": {
+      case EventType.flop_cards: {
         handleFlop(data);
         break;
       }
-      case "turn_card": {
+      case EventType.turn_card: {
         handleTurn(data);
         break;
       }
-      case "river_card": {
+      case EventType.river_card: {
         // TODO:
         handleRiver(data);
         break;
       }
-      case "winner": {
+      case EventType.winner: {
         //  TODO:
         handleWinner(data);
         break;
       }
-      case "request_action": {
-        //  TODO:
-        handleRequestAction(data);
-        break;
-      }
-      case undefined: {
+      case EventType.request_action: {
+        requestActionEventSchema.validateSync(data);
+        const requestActionEvent = (data as unknown) as RequestActionEvent;
+        handleRequestAction(requestActionEvent);
         break;
       }
       default: {
-        alert("wrong event type came from backend => " + event);
+        throw new Error(`unknown event type "${event}"`);
       }
-      //  TODO: other events
     }
   }, [socketMessage]);
 
   const handlePreflop = (data: PreflopEvent) => {
-    setPlayers(daya.players);
+    const players = data.players.sort((a, b) => a.position - b.position);
+    setPlayers(players);
 
     const activePlayers = data.active_players;
 
-    const buttonPosition: number = data.button_position;
+    setButtonPosition(data.button_position);
 
-    const blinds = data.blinds;
-    setBlinds({
-      small: blinds.small,
-      big: blinds.big,
-      ante: blinds.ante,
-    });
+    setBlinds(data.blinds);
 
     const pot: number = data.pot;
     setPot(pot);
+
+    assert(username != null, "error loading user");
+    const index = players.findIndex((player) => player.name === username);
+    if (index === -1) {
+      throw new Error(
+        `player with username "${username}" was not found in players "${players.map(
+          (p) => p.name
+        )}"`
+      );
+    }
+    const position = players[index].position;
+    setCurrentPlayerPosition(position);
 
     const currentPlayerData = data.current;
 
@@ -141,17 +162,6 @@ const Table: React.FC = () => {
     ) as PocketHand;
 
     setCurrentPlayerCards(currentPocketHand);
-
-    const index = players.findIndex((player) => player.name === username);
-    if (index === -1) {
-      console.error(
-        `player with username ${username} was not found in players`
-      );
-      console.error(players);
-      return;
-    }
-    const position = players[index].position;
-    setCurrentPlayerPosition(position);
   };
 
   const handleFlop = (data: any) => {
@@ -168,7 +178,7 @@ const Table: React.FC = () => {
     //  TODO:
     const receivedTurnCard: string = data.turn_card;
     const turnCard: Card = convertStringToCard(receivedTurnCard);
-    const newCardsOnTable = [...cardsOnTable, turnCard];
+    const newCardsOnTable = [...(cardsOnTable ?? []), turnCard];
     setCardsOnTable(newCardsOnTable);
   };
 
@@ -176,7 +186,7 @@ const Table: React.FC = () => {
     //  TODO:
     const receivedRiverCard: string = data.river_card;
     const riverCard: Card = convertStringToCard(receivedRiverCard);
-    const newCardsOnTable = [...cardsOnTable, riverCard];
+    const newCardsOnTable = [...(cardsOnTable ?? []), riverCard];
     setCardsOnTable(newCardsOnTable);
   };
 
@@ -191,15 +201,9 @@ const Table: React.FC = () => {
     }
   };
 
-  const handleRequestAction = (data: any) => {
-    const readActionSpace: { [key: string]: any }[] = data.action_space;
-
-    const actionSpace: RequestAction[] = readActionSpace.map((action) => {
-      const { type, size, min, max } = action;
-      const a: RequestAction = { type, size, min, max };
-      return a;
-    });
-    setActions(actionSpace);
+  const handleRequestAction = (data: RequestActionEvent) => {
+    setActionSpace(data.action_space);
+    setActionPosition(currentPlayerPosition);
   };
 
   const handleNewSocketMessage = async (x: SocketMessage): Promise<void> => {
@@ -228,7 +232,6 @@ const Table: React.FC = () => {
     const response = await apiClient.get(
       `/tables/${tableId}/join/${username}/`
     );
-    console.log("response", response);
     setIsPlayer(true);
     // refreshPlayers();
     // todo: subscribe #2 to socketio
@@ -248,7 +251,7 @@ const Table: React.FC = () => {
     assert(username != null, "error loading user");
 
     act(tableId, username, type, size);
-    setActions([]);
+    setActionSpace(undefined);
   };
 
   if (!tableId) {
@@ -283,45 +286,42 @@ const Table: React.FC = () => {
               paddingTop: "100px",
             }}
           >
-            <div>pot: {pot}</div>
+            <h1 data-cy={TestID.TABLE_POT}>pot: {pot}</h1>
             <div>
               blinds: {blinds.small} {blinds.big} {blinds.ante}
             </div>
           </div>
 
-          {/* {event !== "preflop" && event !== "" && ( */}
           <div className={classes.cardsArea}>
-            {cardsOnTable.map((card, index) => (
-              <Card key={index} card={card} />
+            {cardsOnTable?.map((card) => (
+              <CardComponent key={`${card.rank}-${card.suit}`} card={card} />
             ))}
           </div>
-          {/* )} */}
 
           <div className={classes.playerArea}>
-            {players
-              .sort((a, b) => {
-                return a.position - b.position;
-              })
-              .map((player: IPlayer) => (
-                <Player
+            {players ? (
+              players.map((player: Player) => (
+                <PlayerComponent
+                  key={`${player.name}-${player.cards}`}
                   player={player}
-                  currentPlayerPosition={currentPlayerPosition}
-                  currentPlayerCards={currentPlayerCards}
-                  position={player.position}
-                  key={player.position}
-                  button={player.position === buttonPosition}
+                  isCurrentPlayer={player.position === currentPlayerPosition}
+                  playerCards={currentPlayerCards}
+                  isButton={player.position === buttonPosition}
                   active={player.position === actionPosition}
                 />
-              ))}
+              ))
+            ) : (
+              <CircularProgress color="secondary" />
+            )}
           </div>
         </div>
       </div>
       <div className={classes.panel}>
-        {
-          // event === "request_action" &&
-          // currentPlayerPosition === actionPosition &&
-          <ActionPanel actions={actions} handleAction={handleAction} />
-        }
+        {actionSpace ? (
+          <ActionPanel actions={actionSpace} onAction={handleAction} />
+        ) : (
+          <CircularProgress />
+        )}
       </div>
     </div>
   );
