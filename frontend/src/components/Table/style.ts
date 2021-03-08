@@ -11,7 +11,9 @@ export default makeStyles((theme: Theme) => ({
   },
 
   container: {
+    margin: 200,
     // display: "flex",
+    // justifyContent: "center",
     // flexDirection: "column",
     // height: "1000px",
     // height: "100vh",

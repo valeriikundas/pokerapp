@@ -1,3 +1,4 @@
+import { actionTypeList } from "src/models/game";
 import * as yup from "yup";
 import { rankList, suitList } from "../models/card";
 
@@ -23,10 +24,13 @@ export const blindSchema = yup.object().shape({
   ante: yup.number().required(),
 });
 
-export const preflopSchema = yup.object().shape({
-  players: yup.array(playerSchema).required(),
-  button_position: yup.number().required(),
-  blinds: blindSchema.required(),
-  pot: yup.number().required(),
-  current: currentPlayerSchema.required(),
-});
+export const requestActionSchema = yup
+  .object()
+  .shape({
+    type: yup.string().oneOf(actionTypeList).required(),
+    size: yup.number().optional(),
+    min: yup.number().optional(),
+    max: yup.number().optional(),
+  })
+  .noUnknown(true)
+  .strict();

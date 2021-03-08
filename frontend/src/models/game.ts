@@ -1,6 +1,6 @@
-import { Card } from "src/models/card";
+import { Card } from "src/models/card"
 
-export type PocketHand = [Card, Card];
+export type PocketHand = [Card, Card]
 
 export enum EventType {
   preflop = "preflop",
@@ -9,6 +9,7 @@ export enum EventType {
   river_card = "river_card",
   winner = "winner",
   request_action = "request_action",
+  // TODO: add event for notifying player about actions of other players
 }
 
 export const eventTypeList: EventType[] = [
@@ -18,26 +19,33 @@ export const eventTypeList: EventType[] = [
   EventType.river_card,
   EventType.winner,
   EventType.request_action,
-];
+]
 
 export type Player = {
-  name: string;
-  position: number;
-  stack_size: number;
-  cards?: PocketHand;
-};
+  name: string
+  position: number
+  stack_size: number
+  cards?: PocketHand
+}
 
-export type ActionType = "fold" | "check" | "call" | "raise";
+export enum ActionType {
+  FOLD = "FOLD",
+  CHECK = "CHECK",
+  CALL = "CALL",
+  RAISE = "RAISE",
+}
+
+export const actionTypeList = ["FOLD", "CHECK", "CALL", "RAISE"]
 
 export type RequestAction = {
-  type: ActionType;
-  size?: number;
-  min?: number;
-  max?: number;
-};
+  type: ActionType
+  size?: number
+  min?: number
+  max?: number
+}
 
 export type Blinds = {
-  small: number;
-  big: number;
-  ante: number;
-};
+  small: number
+  big: number
+  ante: number
+}

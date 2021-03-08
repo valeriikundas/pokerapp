@@ -1,5 +1,5 @@
-import { ActionType } from "../models/game";
-import apiClient from "./apiClient";
+import { ActionType } from "../models/game"
+import apiClient from "./apiClient"
 
 const act = (
   tableId: number,
@@ -7,10 +7,10 @@ const act = (
   type: ActionType,
   size?: number
 ) => {
-  apiClient.post(`http://localhost:5000/api/act/${tableId}/${username}`, {
+  apiClient.post(`/act/${tableId}/${username}`, {
     type: type,
     size: size,
-  });
-};
+  })
+}
 
-export default act;
+export default act

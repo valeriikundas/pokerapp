@@ -1,13 +1,22 @@
-import { EventType, Blinds, Player } from "./game";
+import { Blinds, EventType, Player, RequestAction } from "./game"
 
-export type PreflopEvent = {
-  event: EventType;
-  players: Player[];
-  active_players: number[];
-  button_position: number;
-  blinds: Blinds;
-  pot: number;
+interface BaseEvent {
+  event: EventType
+}
+
+export interface PreflopEvent extends BaseEvent {
+  event: EventType.preflop
+  players: Player[]
+  active_players: number[]
+  button_position: number
+  blinds: Blinds
+  pot: number
   current: {
-    cards: string[];
-  };
-};
+    cards: string[]
+  }
+}
+
+export interface RequestActionEvent extends BaseEvent {
+  event: EventType.request_action
+  action_space: RequestAction[]
+}
