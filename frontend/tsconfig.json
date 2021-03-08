@@ -7,29 +7,16 @@
     "module": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "isolatedModules": true,
     "noEmit": true,
-    "types": [
-      "cypress"
-    ],
+    "types": ["cypress"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "baseUrl": "."
   },
-  "include": [
-    "src",
-    "cypress"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ]
+  "include": ["src", "cypress"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }
