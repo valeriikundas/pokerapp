@@ -1,69 +1,73 @@
-import { Button } from "@material-ui/core";
-import Slider from "@material-ui/core/Slider";
-import React, { useEffect } from "react";
-import { ActionType, RequestAction } from "../../models/game";
-import useStyles from "./style";
+import Slider from "@material-ui/core/Slider"
+import React from "react"
+import { assert } from "src/utils/asserts"
+import { ActionType, RequestAction } from "../../models/game"
+import { ActionButton } from "./ActionButton"
+import useStyles from "./style"
 
 interface ActionPanelProps {
-  actions: RequestAction[];
-  handleAction: (type: ActionType, size?: number) => void;
+  actions: RequestAction[]
+  onAction: (type: ActionType, size?: number) => void
 }
 
-const ActionPanel = ({ actions, handleAction }: ActionPanelProps) => {
-  const classes = useStyles();
+const ActionPanel = ({ actions, onAction: handleAction }: ActionPanelProps) => {
+  const classes = useStyles()
 
-  const [raiseSize, setRaiseSize] = React.useState(0);
+  const [raiseSize, setRaiseSize] = React.useState<number>()
 
   const getAndSetMinRaiseSize = () => {
-    const raiseActions = actions.filter((action) => action.type === "raise");
-    if (!raiseActions.length) {
-      return;
+    const raiseAction = actions.find(
+      (action) => action.type === ActionType.RAISE
+    )
+    if (!raiseAction) {
+      return
     }
-    const raiseAction = raiseActions[0];
+    assert(raiseAction.min != null, "raiseAction does not have min border")
     if (!raiseAction.min) {
-      return;
+      return
     }
-    setRaiseSize(raiseAction.min);
-  };
+    setRaiseSize(raiseAction.min)
+  }
 
-  useEffect(() => {
-    getAndSetMinRaiseSize();
-  }, [actions]);
+  React.useEffect(() => {
+    getAndSetMinRaiseSize()
+  }, [actions])
 
-  const handleSliderChange = (event: any, newValue: any) => {
-    setRaiseSize(newValue);
-  };
+  const handleSliderChange = (
+    _event: React.ChangeEvent<{}>,
+    newValue: number | number[]
+  ) => {
+    assert(typeof newValue === "number")
+    setRaiseSize(newValue)
+  }
 
-  return (
-    <div className={classes.wrapper}>
-      {actions.map((button: any, index: number) =>
-        button.type === "call" ? (
-          <Button
-            key={index}
-            className={classes.actionButton}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleAction("call", button.size);
-            }}
-          >
-            call {button.size}
-          </Button>
-        ) : button.type === "raise" ? (
-          <div className={classes.buttons} key={index}>
-            <Button
-              key={index}
-              className={classes.actionButton}
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                handleAction("raise", raiseSize);
-              }}
-            >
-              RAISE&nbsp;{raiseSize}
-            </Button>
+  const renderAction = (button: RequestAction): JSX.Element => {
+    switch (button.type) {
+      case ActionType.FOLD:
+      case ActionType.CHECK:
+        return (
+          <ActionButton
+            label={button.type}
+            onClick={() => handleAction(button.type)}
+          />
+        )
+
+      case ActionType.CALL:
+        return (
+          <ActionButton
+            label={`CALL ${button.size}`}
+            onClick={() => handleAction(ActionType.CALL, button.size)}
+          />
+        )
+
+      case ActionType.RAISE:
+        return (
+          <div className={classes.buttons}>
+            <ActionButton
+              label={`RAISE ${raiseSize}`}
+              onClick={() => handleAction(ActionType.RAISE, raiseSize)}
+            />
             <Slider
-              key={index + 1}
               value={raiseSize}
               onChange={handleSliderChange}
               defaultValue={button.max}
@@ -75,22 +79,11 @@ const ActionPanel = ({ actions, handleAction }: ActionPanelProps) => {
               max={button.max}
             />
           </div>
-        ) : (
-          <Button
-            key={index}
-            className={classes.actionButton}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleAction(button.type);
-            }}
-          >
-            {button.type}
-          </Button>
         )
-      )}
-    </div>
-  );
-};
+    }
+  }
 
-export default ActionPanel;
+  return <div className={classes.wrapper}>{actions.map(renderAction)}</div>
+}
+
+export default ActionPanel
